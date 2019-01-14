@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bcj.faker.mapper.mysql.MysqlCustomJobMapper">
+    <sql id="tableName">custom_job </sql>
+    <sql id="columns">id,owner,job_name,show_name,job_command,schedule,schedule_crontab,description,create_time,update_time,update_job_time</sql>
+    <insert id="insert" parameterType="com.bcj.faker.model.CustomJob" useGeneratedKeys="true" keyProperty="id">
+        insert into
+        <include refid="tableName"/>
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="owner not in {null,''}">
+                owner,
+            </if>
+            <if test="jobName not in {null,''}">
+                job_name,
+            </if>
+            <if test="showName not in {null,''}">
+                show_name,
+            </if>
+            <if test="jobCommand not in {null,''}">
+                job_command,
+            </if>
+            <if test="schedule not in {null,''}">
+                schedule,
+            </if>
+            <if test="scheduleCrontab not in {null,''}">
+                schedule_crontab,
+            </if>
+            <if test="description not in {null,''}">
+                description,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="updateTime != null">
+                update_time,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="owner not in {null,''}">
+                #{owner},
+            </if>
+            <if test="jobName not in {null,''}">
+                #{jobName},
+            </if>
+            <if test="showName not in {null,''}">
+                #{showName},
+            </if>
+            <if test="jobCommand not in {null,''}">
+                #{jobCommand},
+            </if>
+            <if test="schedule not in {null,''}">
+                #{schedule},
+            </if>
+            <if test="scheduleCrontab not in {null,''}">
+                #{scheduleCrontab},
+            </if>
+            <if test="description not in {null,''}">
+                #{description},
+            </if>
+
+            <if test="createTime != null">
+                #{createTime},
+            </if>
+            <if test="updateTime != null">
+                #{updateTime},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateJob">
+        update
+        <include refid="tableName"/>
+        <set>
+          update_job_time = now()
+        </set>
+        where id = #{id}
+    </update>
+
+    <select id="getCronSchedulerJobs" resultType="com.bcj.faker.model.CustomJob">
+        select
+        <include refid="columns"/>
+        from
+        <include refid="tableName"/>
+        c where c.flag = 0 and c.schedule='0'
+    </select>
+
+</mapper>
