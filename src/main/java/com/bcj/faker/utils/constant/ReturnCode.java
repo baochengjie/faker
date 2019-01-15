@@ -1,7 +1,7 @@
 package com.bcj.faker.utils.constant;
 
 /**
- * @author baochengjir
+ * @author baochengjie
  * @Title: ReturnCode
  * @ProjectName faker
  * @Description: 返回状态码
