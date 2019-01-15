@@ -2,7 +2,7 @@ package com.bcj.faker.scheduler;
 
 import com.bcj.faker.model.CustomJob;
 import com.bcj.faker.service.MysqlCustomJobService;
-import com.bcj.faker.utils.HandleUtils;
+import com.bcj.faker.utils.Utils;
 import com.bcj.faker.utils.constant.Constant;
 import lombok.extern.slf4j.Slf4j;
 import org.quartz.*;
@@ -62,7 +62,7 @@ public class MyScheduler {
                 build();
         String crontab = customJob.getScheduleCrontab();
         if ("0".equals(customJob.getSchedule())) {
-            crontab = HandleUtils.getCron(customJob.getScheduleCrontab());
+            crontab = Utils.getCron(customJob.getScheduleCrontab());
         }
         log.info(customJob.getJobName() + " crontab " + crontab);
         //定时计划
@@ -128,7 +128,7 @@ public class MyScheduler {
                         build();
                 String crontab = Constant.CRONTAB;
                 if ("0".equals(customJob.getSchedule())) {
-                    crontab = HandleUtils.getCron(customJob.getScheduleCrontab());
+                    crontab = Utils.getCron(customJob.getScheduleCrontab());
                 }
                 log.info(customJob.getJobName() + " crontab " + crontab);
                 //定时计划

@@ -2,7 +2,7 @@ package com.bcj.faker.service;
 
 import com.bcj.faker.mapper.mysql.MysqlCustomJobMapper;
 import com.bcj.faker.model.CustomJob;
-import com.bcj.faker.utils.HandleUtils;
+import com.bcj.faker.utils.Utils;
 import com.bcj.faker.utils.constant.Constant;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -81,7 +81,7 @@ public class MysqlCustomJobService {
      * @throws
      */
     public static String getNewStr(String oldJobName, String oldShowName, String newName) {
-        if (!HandleUtils.isEmpty(oldJobName) && !HandleUtils.isEmpty(oldShowName) && !HandleUtils.isEmpty(newName)) {
+        if (!Utils.isEmpty(oldJobName) && !Utils.isEmpty(oldShowName) && !Utils.isEmpty(newName)) {
             oldShowName = oldShowName.substring(oldJobName.length());
             return newName + oldShowName;
         } else {
