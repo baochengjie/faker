@@ -20,12 +20,11 @@ public class CustomJob implements Serializable {
     private String owner; // 创建人
     private String jobName; //任务名称
     private String showName; // 显示名称
-    private String jobCommand; //job的命令
     private String schedule; // 是否定时任务 （0是  1 否）
     private String scheduleCrontab; // 定时计划
     private String description; // 描述
-    @JsonSerialize(using = JsonTimeSerializer.class)
-    private Date createTime; // 创建时间
+    //@JsonSerialize(using = JsonTimeSerializer.class)
+    private String createTime; // 创建时间
     @JsonSerialize(using = JsonTimeSerializer.class)
     private Date updateTime; // 更新时间
     @JsonSerialize(using = JsonTimeSerializer.class)
@@ -34,11 +33,10 @@ public class CustomJob implements Serializable {
     public CustomJob() {
     }
 
-    public CustomJob(String owner, String jobName, String showName, String jobCommand, String schedule, String scheduleCrontab, String description) {
+    public CustomJob(String owner, String jobName, String showName, String schedule, String scheduleCrontab, String description) {
         this.owner = owner;
         this.jobName = jobName;
         this.showName = showName;
-        this.jobCommand = jobCommand;
         this.schedule = schedule;
         this.scheduleCrontab = scheduleCrontab;
         this.description = description;

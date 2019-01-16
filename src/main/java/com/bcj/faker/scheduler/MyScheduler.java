@@ -1,7 +1,9 @@
 package com.bcj.faker.scheduler;
 
+import com.bcj.faker.dto.JobMessage;
+import com.bcj.faker.model.CustomJobDetail;
 import com.bcj.faker.model.CustomJob;
-import com.bcj.faker.service.MysqlCustomJobService;
+import com.bcj.faker.service.MysqlJobService;
 import com.bcj.faker.utils.Utils;
 import com.bcj.faker.utils.constant.Constant;
 import lombok.extern.slf4j.Slf4j;
@@ -24,7 +26,7 @@ import java.util.List;
 public class MyScheduler {
 
     @Autowired
-    MysqlCustomJobService mysqlCustomJobService;
+    MysqlJobService mysqlCustomJobService;
 
     @Autowired
     SchedulerFactoryBean schedulerFactoryBean;
@@ -37,7 +39,7 @@ public class MyScheduler {
      * @author baochengjie
      */
     public void getAllSchedulerJobs() {
-        List<CustomJob> customJobList = mysqlCustomJobService.getCronSchedulerJobs();
+        List<JobMessage> customJobList = mysqlCustomJobService.getCronSchedulerJobMessages();
         customJobList.stream().forEach(value -> {
             addJob(value);
         });
@@ -45,18 +47,22 @@ public class MyScheduler {
 
     /* *
      * @Description: 添加定时任务
-     * @param [customJob]
+     * @param [job]
      * @return
      * @throws
      * @author baochengjie
      */
-    public void addJob(CustomJob customJob) {
+    public void addJob(JobMessage jobMessage) {
         Scheduler scheduler = schedulerFactoryBean.getScheduler();
+        CustomJob customJob = jobMessage.getCustomJob();
+        CustomJobDetail customJobDetail = jobMessage.getCustomJobDetail();
         //任务信息
         JobDetail jobDetail = JobBuilder.newJob(MyJob.class).
                 usingJobData("id", customJob.getId()).
-                usingJobData("jobCommand", customJob.getJobCommand()).
                 usingJobData("schedule", customJob.getSchedule()).
+                usingJobData("command_dir",customJobDetail.getCommandDir()).
+                usingJobData("command_param",customJobDetail.getCommandParam()).
+                usingJobData("param_prefix",customJobDetail.getParamPrefix()).
                 withIdentity(customJob.getId().toString()).
                 withDescription(customJob.getJobName()).
                 build();
@@ -109,11 +115,14 @@ public class MyScheduler {
      * @param [CustomJob customJob, String cronExpression]
      * @return
      * @throws
-     * @author xiaobingxian
+     * @author baochengjie
      * @date 2018/10/16
      */
-    public void updateJob(CustomJob customJob, String cronExpression) {
+    public void updateJob(JobMessage jobMessage) {
         Scheduler scheduler = schedulerFactoryBean.getScheduler();
+        CustomJob customJob = jobMessage.getCustomJob();
+        CustomJobDetail customJobDetail = jobMessage.getCustomJobDetail();
+        String cronExpression = customJob.getScheduleCrontab();
         try {
             CronTrigger cronTrigger = (CronTrigger) scheduler.getTrigger(TriggerKey.triggerKey(customJob.getId().toString()));
             if (cronTrigger != null && !cronTrigger.getCronExpression().equals(cronExpression)) {
@@ -121,8 +130,10 @@ public class MyScheduler {
 //                addJob(customJob);
                 JobDetail jobDetail = JobBuilder.newJob(MyJob.class).
                         usingJobData("id", customJob.getId()).
-                        usingJobData("jobCommand", customJob.getJobCommand()).
                         usingJobData("schedule", customJob.getSchedule()).
+                        usingJobData("command_dir",customJobDetail.getCommandDir()).
+                        usingJobData("command_param",customJobDetail.getCommandParam()).
+                        usingJobData("param_prefix",customJobDetail.getParamPrefix()).
                         withIdentity(customJob.getId().toString()).
                         withDescription(customJob.getJobName()).
                         build();
@@ -146,7 +157,7 @@ public class MyScheduler {
                 }
             }
         } catch (SchedulerException e) {
-            log.error("updateJob 更新定时任务 ", e);
+            log.error("updateJobTime 更新定时任务 ", e);
         }
 
     }

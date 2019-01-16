@@ -24,13 +24,13 @@ public class Constant {
     public static String CRONTAB = "0 0 * * * ?";
 //    public static int ROOT = 0; // 根节点
 
-    public static String INSERT = "insert"; // 添加
-    public static String UPDATE = "update"; // 修改
+    public static String INSERT = "insertCustomJob"; // 添加
+    public static String UPDATE = "updateCustomJob"; // 修改
 
     public static String JOB_SQL_GET = "/asteria/get/custom/sql";
     public static String JOB_SQL_GET_ALL = "/asteria/get/all/custom/sql";
     public static String JOB_SQL_PUT = "/asteria/put/custom/sql";
-    public static String JOB_SQL_UPDATE = "/asteria/update/custom/sql";
+    public static String JOB_SQL_UPDATE = "/asteria/updateCustomJob/custom/sql";
     public static String JOB_SQL_EXECUTE = "/asteria/execute/custom/sql";
     public static String JOB_SQL_DELETE = "/asteria/delete/custom/sql";
     public static String JOB_SQL_GET_RELATION = "/asteria/get/relation/custom/sql";
@@ -38,7 +38,7 @@ public class Constant {
     public static String JOB_SQL_MODIFY = "/asteria/modify/custom/sql";
 
     public static String FOLDER_PUT = "/asteria/put/custom/dashboard/folder";
-    public static String FOLDER_UPDATE = "/asteria/update/custom/dashboard/folder";
+    public static String FOLDER_UPDATE = "/asteria/updateCustomJob/custom/dashboard/folder";
     public static String FOLDER_DELETE = "/asteria/delete/custom/dashboard/folder";
     public static String FOLDER_GET_ALL ="/asteria/get/all/custom/dashboard/folder";
     public static String FOLDER_GET_UNION ="/asteria/get/union/custom/dashboard/folder";
@@ -46,7 +46,7 @@ public class Constant {
 
     public static String DASHBORD_GET_ALL ="/asteria/get/all/custom/dashboard";
     public static String DASHBORD_PUT = "/asteria/put/custom/dashboard";
-    public static String DASHBORD_UPDATE = "/asteria/update/custom/dashboard";
+    public static String DASHBORD_UPDATE = "/asteria/updateCustomJob/custom/dashboard";
     public static String DASHBORD_DELETE = "/asteria/delete/custom/dashboard";
     public static String DASHBORD_MOVE = "/asteria/move/custom/dashboard";
     public static String DASHBORD_SAVE = "/asteria/save/custom/dashboard";

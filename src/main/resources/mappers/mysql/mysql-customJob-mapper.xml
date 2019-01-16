@@ -3,10 +3,10 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.bcj.faker.mapper.mysql.MysqlCustomJobMapper">
-    <sql id="tableName">custom_job </sql>
-    <sql id="columns">id,owner,job_name,show_name,job_command,schedule,schedule_crontab,description,create_time,update_time,update_job_time</sql>
-    <insert id="insert" parameterType="com.bcj.faker.model.CustomJob" useGeneratedKeys="true" keyProperty="id">
+<mapper namespace="com.bcj.faker.mapper.mysql.MysqlJobMapper">
+    <sql id="tableName">job </sql>
+    <sql id="columns">id,owner,job_name,show_name,schedule,schedule_crontab,description,create_time,update_time,update_job_time</sql>
+    <insert id="insertCustomJob" parameterType="com.bcj.faker.model.CustomJob" useGeneratedKeys="true" keyProperty="id">
         insert into
         <include refid="tableName"/>
         <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -19,9 +19,6 @@
             <if test="showName not in {null,''}">
                 show_name,
             </if>
-            <if test="jobCommand not in {null,''}">
-                job_command,
-            </if>
             <if test="schedule not in {null,''}">
                 schedule,
             </if>
@@ -31,12 +28,8 @@
             <if test="description not in {null,''}">
                 description,
             </if>
-            <if test="createTime != null">
                 create_time,
-            </if>
-            <if test="updateTime != null">
-                update_time,
-            </if>
+                update_time
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="owner not in {null,''}">
@@ -48,9 +41,6 @@
             <if test="showName not in {null,''}">
                 #{showName},
             </if>
-            <if test="jobCommand not in {null,''}">
-                #{jobCommand},
-            </if>
             <if test="schedule not in {null,''}">
                 #{schedule},
             </if>
@@ -60,16 +50,97 @@
             <if test="description not in {null,''}">
                 #{description},
             </if>
-
-            <if test="createTime != null">
-                #{createTime},
-            </if>
-            <if test="updateTime != null">
-                #{updateTime},
-            </if>
+                now(),now()
         </trim>
     </insert>
-    <update id="updateJob">
+
+    <!--插入jobDetail的信息-->
+    <insert id="insertCustomJobDetail" parameterType="com.bcj.faker.model.CustomJobDetail">
+        insert into
+        job_detail
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="commandDir not in {null,''}">
+                command_dir,
+            </if>
+            <if test="commandParam not in {null,''}">
+                command_param,
+            </if>
+            <if test="paramPrefix not in {null,''}">
+                param_prefix,
+            </if>
+            <if test="jobId not in {null,''}">
+                job_id,
+            </if>
+            create_time
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="commandDir not in {null,''}">
+                #{commandDir},
+            </if>
+            <if test="commandParam not in {null,''}">
+                #{commandParam},
+            </if>
+            <if test="paramPrefix not in {null,''}">
+                #{paramPrefix},
+            </if>
+            <if test="jobId not in {null,''}">
+                #{jobId},
+            </if>
+            now()
+        </trim>
+    </insert>
+
+    <!--更新job表-->
+    <update id="updateCustomJob" parameterType="com.bcj.faker.model.CustomJob">
+        update
+        <include refid="tableName"/>
+        <set>
+            <if test="jobName not in {null,''}">
+                job_name=#{jobName},
+            </if>
+            <if test="showName not in {null,''}">
+                show_name=#{showName},
+            </if>
+            <if test="schedule not in {null,''}">
+                schedule=#{schedule},
+            </if>
+            <if test="scheduleCrontab not in {null,''}">
+                schedule_crontab=#{scheduleCrontab},
+            </if>
+            <if test="description not in {null,''}">
+                description=#{description},
+            </if>
+            update_time=now()
+        </set>
+        <where>
+            id = #{id}
+        </where>
+    </update>
+
+    <!--更新jobDetail表-->
+    <update id="updateCustomJobDetail" parameterType="com.bcj.faker.model.CustomJobDetail">
+        update
+        job_detail
+        <set>
+            <if test="commandDir not in {null,''}">
+                command_dir=#{commandDir},
+            </if>
+            <if test="commandParam not in {null,''}">
+                command_param=#{commandParam},
+            </if>
+            <if test="paramPrefix not in {null,''}">
+                param_prefix=#{paramPrefix},
+            </if>
+            update_time=now()
+        </set>
+        <where>
+            job_id = #{jobId}
+        </where>
+    </update>
+
+
+
+    <update id="updateJobTime">
         update
         <include refid="tableName"/>
         <set>
@@ -85,5 +156,23 @@
         <include refid="tableName"/>
         c where c.flag = 0 and c.schedule='0'
     </select>
+
+    <select id="getCronSchedulerJobMessages" resultMap="jobMessageMap">
+        select j.id job_id,jd.id job_detail_id,j.*,jd.*
+        from job j
+        join job_detail jd on j.id = jd.job_id
+        where j.flag = 0 and j.schedule='0'
+    </select>
+
+    <!--jobMessage result map-->
+    <resultMap id="jobMessageMap" type="com.bcj.faker.dto.JobMessage">
+        <association property="customJob" javaType="com.bcj.faker.model.CustomJob" autoMapping="true">
+            <id property="id" column="job_id"></id>
+        </association>
+        <association property="customJobDetail" javaType="com.bcj.faker.model.CustomJobDetail" autoMapping="true">
+            <id property="id" column="job_detail_id"></id>
+        </association>
+    </resultMap>
+
 
 </mapper>
